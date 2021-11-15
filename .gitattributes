@@ -32,6 +32,4 @@ text eol=lf
 *.mapdb filter=lfs diff=lfs merge=lfs -text
 *.p filter=lfs diff=lfs merge=lfs -text
 *.txt filter=lfs diff=lfs merge=lfs -text
-test/**/*.xml filter=lfs diff=lfs merge=lfs -text
-production/**/*.xml filter=lfs diff=lfs merge=lfs -text
-test/input/sf-light/TechTakeover_longTerm_lowTech/ filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
