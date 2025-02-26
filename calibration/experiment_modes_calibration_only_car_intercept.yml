@@ -46,7 +46,7 @@ factors:
     levels:
     - name: Low
       params:
-        beam.agentsim.agents.modalBehaviors.multinomialLogit.params.car_intercept: -15.0
+        beam.agentsim.agents.modalBehaviors.mulitnomialLogit.params.car_intercept: -15.0
     - name: High
       params:
-        beam.agentsim.agents.modalBehaviors.multinomialLogit.params.car_intercept: 0.0
+        beam.agentsim.agents.modalBehaviors.mulitnomialLogit.params.car_intercept: 0.0
