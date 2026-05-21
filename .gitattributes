@@ -35,3 +35,4 @@ text eol=lf
 *.xml filter=lfs diff=lfs merge=lfs -text
 *.omx filter=lfs diff=lfs merge=lfs -text
 urbansim/atlas-2019/*.parquet filter=lfs diff=lfs merge=lfs -text
+*.zst filter=lfs diff=lfs merge=lfs -text
