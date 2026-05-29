@@ -1,0 +1,315 @@
+fleet_assignment:
+  models:
+
+    freight_bayesian_dag:
+      scoring:
+        likelihood_floor: 0.001
+        weights:
+          fleet_vmt_prior: 0.2
+          fleet_population_prior: 0.05
+          payload_mass: 0.1
+          naics_sector: 1
+          port_location: 5
+      evidence:
+        payload_mass:
+          source: gvwr_lbs
+          unit: lbs
+          overload_penalty_power: 2.0
+        naics_sector:
+          - naics_code_2: [ '11', '31', '32', '33', '48', '49' ]
+            vehicle_category: [ T6 CAIRP Class 7, T6 Instate Tractor Class 7, T7 CAIRP Class 8, T7 Tractor Class 8, T7IS ]
+          - naics_code_2: [ '21' ]
+            vehicle_category: [ T6 Instate Delivery Class 7, T6 Instate Other Class 7, T6 OOS Class 7, T7 NNOOS Class 8, T7 NOOS Class 8, T7 Single Dump Class 8, T7 Single Other Class 8 ]
+          - naics_code_2: [ '23' ]
+            vehicle_category: [ T7 Single Concrete/Transit Mix Class 8, T7 Single Dump Class 8 ]
+          - naics_code_2: [ '42', '62', '72' ]
+            vehicle_category: [ T6 CAIRP Class 4, T6 CAIRP Class 5, T6 CAIRP Class 6, T6 OOS Class 4, T6 OOS Class 5, T6 OOS Class 6, T6 Instate Other Class 4, T6 Instate Other Class 5, T6 Instate Other Class 6, T6 Instate Delivery Class 7, T6 Instate Other Class 7, T6 OOS Class 7, T7 NNOOS Class 8, T7 NOOS Class 8, T7 Single Dump Class 8, T7 Single Other Class 8 ]
+          - naics_code_2: [ '56' ]
+            vehicle_category: [ T7 SWCV Class 8, T7 Single Dump Class 8 ]
+        port_location:
+          - zone_codes: [ '060230013001', '060530126001', '060759809001', '060770039001', '060133780002', '060133180002', '060816103021', '060133580005', '060770039001', '060133580005', '060133200011' ]
+            vehicle_category: [ T7 Other Port Class 8 ]
+          - zone_codes: [ '060019819001' ]
+            vehicle_category: [ T7 POAK Class 8 ]
+
+    passenger_bayesian_dag:
+      scoring:
+        likelihood_floor: 0.001
+        weights:
+          fleet_vmt_prior: 0.3
+          fleet_population_prior: 0.1
+          income: 0.6
+      evidence:
+        income:
+          center_ratio: 0.25
+          sigma_ratio: 0.1
+
+  mappings:
+    freight:
+      vehicle_categories:
+        Class12aVocational: [ LDA, LDT1, LDT2 ]
+        Class2b3Vocational: [ MDV, LHD1, LHD2 ]
+        Class456Vocational: [ T6 CAIRP Class 4, T6 CAIRP Class 5, T6 CAIRP Class 6, T6 Instate Delivery Class 4, T6 Instate Delivery Class 5, T6 Instate Delivery Class 6, T6 Instate Other Class 4, T6 Instate Other Class 5, T6 Instate Other Class 6, T6 Instate Tractor Class 6, T6 OOS Class 4, T6 OOS Class 5, T6 OOS Class 6, T6TS ]
+        Class78Vocational: [ T6 Instate Delivery Class 7, T6 Instate Other Class 7, T6 OOS Class 7, T7 NNOOS Class 8, T7 NOOS Class 8, T7 SWCV Class 8, T7 Single Concrete/Transit Mix Class 8, T7 Single Dump Class 8, T7 Single Other Class 8 ]
+        Class78Tractor: [ T6 CAIRP Class 7, T6 Instate Tractor Class 7, T7 CAIRP Class 8, T7 Other Port Class 8, T7 POAK Class 8, T7 Tractor Class 8, T7IS ]
+      fuel_types:
+        diesel: [ Dsl ]
+        electricity: [ Elec ]
+        gasoline: [ Gas ]
+
+    passenger:
+      body_types:
+        car: [ LDA ]
+        suv: [ LDA, LDT1, LDT2 ]
+        minvan: [ LDT1, LDT2 ]
+        truck: [ LDT1, LDT2, MDV ]
+        pickup: [ LDT1, LDT2, MDV ]
+        van: [ LDT1, LDT2, MDV ]
+      fuel_types:
+        diesel: [ Dsl ]
+        biodiesel: [ Dsl ]
+        electricity: [ Elec ]
+        gasoline: [ Gas ]
+        electricity+gasoline: [ Phe ]
+        electricity+diesel: [ Phe ]
+        hydrogen: [ Elec ]
+        naturalgas: [ NG ]
+      fuel_fallbacks:
+        - source_fuel: electricity+gasoline
+          if_model_year: "<=2003"
+          fallback_emfac_fuels: [ Gas ]
+          reason: old_phev_treat_as_gas
+      vehicle_categories:
+        Car: [ LDA, LDT1, LDT2, MDV ]
+        Bike: [ MCY ]
+        MediumDutyPassenger: [ UBUS ]
+
+    fuel_consumption:
+      - fastsim_id: 2015_electric_Chevrolet_Volt_Charge_Depleting
+        vehicle_categories: [LDA]
+        fuel_types: [Phe]
+      - fastsim_id: 2016_electric_Chevrolet_Volt_Charge_Depleting
+        vehicle_categories: [LDA]
+        fuel_types: [Phe]
+      - fastsim_id: 2017_electric_Chevrolet_Volt_Charge_Depleting
+        vehicle_categories: [LDA]
+        fuel_types: [Phe]
+      - fastsim_id: 2018_electric_Chevrolet_Volt_Charge_Depleting
+        vehicle_categories: [LDA]
+        fuel_types: [Phe]
+      - fastsim_id: 2015_electric_Tesla_Model_S_70D
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2016_electric_Tesla_Model_S_70D
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2015_gasoline_Buick_Regal_eAssist
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Buick_Regal_eAssist
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Buick_Regal_eAssist
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Buick_Regal_eAssist
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2015_gasoline_Chrysler_200
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2015_gasoline_Toyota_Prius_v
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Toyota_Prius_v
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Toyota_Prius_v
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Toyota_Prius_v
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Toyota_Prius_v
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Ford_Fusion_AWD
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Ford_Fusion_AWD
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Ford_Fusion_AWD
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_hydrogen_Toyota_Mirai
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2017_hydrogen_Toyota_Mirai
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2018_hydrogen_Toyota_Mirai
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2017_electric_Tesla_Model_S_(60_kW-hr_battery_pack)
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2018_electric_Tesla_Model_S_(60_kW-hr_battery_pack)
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2019_electric_Tesla_Model_S_(60_kW-hr_battery_pack)
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2019_electric_Audi_S3c6_Charge_Depleting
+        vehicle_categories: [LDA]
+        fuel_types: [Phe]
+      - fastsim_id: 2019_gasoline_Buick_LaCrosse_eAssist
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Chevrolet_Malibu
+        vehicle_categories: [LDA]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_hydrogen_Honda_Clarity_FCV
+        vehicle_categories: [LDA]
+        fuel_types: [Elec]
+      - fastsim_id: 2015_gasoline_Chevrolet_City_Express_Cargo_Van
+        vehicle_categories: [LDT1]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Chevrolet_City_Express_Cargo_Van
+        vehicle_categories: [LDT1]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Chevrolet_City_Express_Cargo_Van
+        vehicle_categories: [LDT1]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Chevrolet_City_Express_Cargo_Van
+        vehicle_categories: [LDT1]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Chevrolet_City_Express_Cargo_Van
+        vehicle_categories: [LDT1]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_electric_Toyota_RAV4_AWDc4_Charge_Depleting
+        vehicle_categories: [LDA, LDT1, LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2018_electric_Toyota_RAV4_AWDc4_Charge_Depleting
+        vehicle_categories: [LDA, LDT1, LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2019_electric_Honda_CR-V_4WDc3_Charge_Depleting
+        vehicle_categories: [LDT1, LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2019_electric_Toyota_RAV4_AWDc4
+        vehicle_categories: [LDA, LDT1, LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2015_electric_Porsche_Cayenne_S_e-Hybrid_Charge_Depleting
+        vehicle_categories: [LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2016_electric_Porsche_Cayenne_S_e-Hybrid_Charge_Depleting
+        vehicle_categories: [LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2015_gasoline_Infiniti_QX60_Hybrid_FWD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Infiniti_QX60_Hybrid_FWD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Infiniti_QX60_Hybrid_FWD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Infiniti_QX60_Hybrid_FWD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Infiniti_QX60_Hybrid_FWD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2015_gasoline_Toyota_Highlander_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Toyota_Highlander_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Toyota_Highlander_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Toyota_Highlander_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Toyota_Highlander_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_hydrogen_Hyundai_Tucson_Fuel_Cell
+        vehicle_categories: [LDA, LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2018_hydrogen_Hyundai_Tucson_Fuel_Cell
+        vehicle_categories: [LDA, LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2019_hydrogen_Hyundai_Tucson_Fuel_Cell
+        vehicle_categories: [LDA, LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2015_gasoline_Nissan_Quest
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_gasoline_Toyota_Sienna_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Toyota_Sienna_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Toyota_Sienna_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Toyota_Sienna_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_electric_Honda_Odysseyc6_Charge_Depleting
+        vehicle_categories: [LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2019_electric_Honda_Odysseyc6_Charge_Depleting
+        vehicle_categories: [LDT2]
+        fuel_types: [Phe]
+      - fastsim_id: 2019_electric_Honda_Odysseyc5
+        vehicle_categories: [LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2015_gasoline_Ford_F150_Pickup_4WD
+        vehicle_categories: [LDT2, MDV]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2016_electric_Tesla_Model_X_AWD_90D
+        vehicle_categories: [LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2017_electric_Tesla_Model_X_AWD_90D
+        vehicle_categories: [LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2018_electric_Tesla_Model_X_AWD_90D
+        vehicle_categories: [LDT2]
+        fuel_types: [Elec]
+      - fastsim_id: 2016_gasoline_Chevrolet_Silverado_C15_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2017_gasoline_Chevrolet_Silverado_C15_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2018_gasoline_Chevrolet_Silverado_C15_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_gasoline_Chevrolet_Silverado_C15_2WD
+        vehicle_categories: [LDT2]
+        fuel_types: [Gas, NG]
+      - fastsim_id: 2019_electric_Ram_1500_4WDc6_Charge_Depleting
+        vehicle_categories: [LDT2, MDV]
+        fuel_types: [Phe]
+      - fastsim_id: Class_6_Box_truck_(BEV,_2025,_no_program)
+        vehicle_categories: [LHD1, LHD2, T6 CAIRP Class 4, T6 CAIRP Class 5, T6 CAIRP Class 6, T6 Instate Delivery Class 4, T6 Instate Delivery Class 5, T6 Instate Delivery Class 6, T6 Instate Other Class 4, T6 Instate Other Class 5, T6 Instate Other Class 6, T6 Instate Tractor Class 6, T6 OOS Class 4, T6 OOS Class 5, T6 OOS Class 6, T6TS]
+        fuel_types: [Elec]
+      - fastsim_id: Class_6_Box_truck_(Diesel,_2020,_no_program)
+        vehicle_categories: [LHD1, LHD2, T6 CAIRP Class 4, T6 CAIRP Class 5, T6 CAIRP Class 6, T6 Instate Delivery Class 4, T6 Instate Delivery Class 5, T6 Instate Delivery Class 6, T6 Instate Other Class 4, T6 Instate Other Class 5, T6 Instate Other Class 6, T6 Instate Tractor Class 6, T6 OOS Class 4, T6 OOS Class 5, T6 OOS Class 6, T6TS]
+        fuel_types: [Dsl]
+      - fastsim_id: Class_8_Box_truck_(BEV,_2025,_no_program)
+        vehicle_categories: [T6 Instate Delivery Class 7, T6 Instate Other Class 7, T6 OOS Class 7, T7 NNOOS Class 8, T7 NOOS Class 8, T7 SWCV Class 8, T7 Single Concrete/Transit Mix Class 8, T7 Single Dump Class 8, T7 Single Other Class 8]
+        fuel_types: [Elec]
+      - fastsim_id: Class_8_Box_truck_(Diesel,_2020,_no_program)
+        vehicle_categories: [T6 Instate Delivery Class 7, T6 Instate Other Class 7, T6 OOS Class 7, T7 NNOOS Class 8, T7 NOOS Class 8, T7 SWCV Class 8, T7 Single Concrete/Transit Mix Class 8, T7 Single Dump Class 8, T7 Single Other Class 8]
+        fuel_types: [Dsl]
+      - fastsim_id: Class_8_Sleeper_cab_high_roof_(BEV,_2025,_no_program)
+        vehicle_categories: [T6 CAIRP Class 7, T6 Instate Tractor Class 7, T7 CAIRP Class 8, T7 Other Port Class 8, T7 POAK Class 8, T7 Tractor Class 8, T7IS]
+        fuel_types: [Elec]
+      - fastsim_id: Class_8_Sleeper_cab_high_roof_(Diesel,_2020,_no_program)
+        vehicle_categories: [T6 CAIRP Class 7, T6 Instate Tractor Class 7, T7 CAIRP Class 8, T7 Other Port Class 8, T7 POAK Class 8, T7 Tractor Class 8, T7IS]
+        fuel_types: [Dsl]
