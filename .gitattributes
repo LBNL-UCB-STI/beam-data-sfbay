@@ -37,3 +37,4 @@ text eol=lf
 urbansim/atlas-2019/*.parquet filter=lfs diff=lfs merge=lfs -text
 *.zst filter=lfs diff=lfs merge=lfs -text
 vehicle-tech/dispersions/*.parquet filter=lfs diff=lfs merge=lfs -text
+*.parquet filter=lfs diff=lfs merge=lfs -text
