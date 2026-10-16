@@ -1,0 +1,37 @@
+{
+  "artifact_name": "init.linkstats.parquet",
+  "format": "parquet",
+  "identity": "sha256:file:26e8153fa3e73cf3635c45cb00b185acf327dd75338ad77ca5e30ce060c6b2e5",
+  "parquet_metadata": {
+    "columns": [
+      "link",
+      "from",
+      "to",
+      "hour",
+      "length",
+      "freespeed",
+      "capacity",
+      "stat",
+      "volume",
+      "volume_Class12aVocational",
+      "volume_Class2b3Vocational",
+      "volume_Class456Vocational",
+      "volume_Class78Vocational",
+      "volume_Class78Tractor",
+      "traveltime"
+    ],
+    "num_row_groups": 1,
+    "num_rows": 20824920
+  },
+  "schema_version": "pilates.linkstats_provenance.v1",
+  "size_bytes": 36378017,
+  "source": {
+    "beam_run_label": "beam-fc07-v260419-it3",
+    "consist_tracker_db": null,
+    "flow_capacity_factor": 0.07,
+    "iteration": 3,
+    "network": "sfbay-cbg5500-weakConn-network",
+    "original_archive_relpath": "beam-fc07-v260419-it3/ITERS/it.3/3.linkstats.parquet",
+    "source_uri": "https://drive.google.com/file/d/10ubIO7oamqNbzvRlDfIWcQ8xSWcee9s5/view?usp=share_link"
+  }
+}
