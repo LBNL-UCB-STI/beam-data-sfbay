@@ -279,7 +279,7 @@ urbansim:
 beam:
   artifact_formats:
     exchange: csv
-  config: scenarios/stakeholder-task1-fy26/beam-pilates-run--sfbay--jdeq-calibration-FC07-FRISM-2050-BF-1EP.conf
+  config: scenarios/network-calibration/beam-pilates-run--sfbay--jdeq-calibration-FC07-FRISM-2050-BF-1EP.conf
   sample: 1.0
   replanning_portion: 0.4
   memory: "${BEAM_MEMORY}"
